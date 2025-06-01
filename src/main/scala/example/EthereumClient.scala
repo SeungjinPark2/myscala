@@ -2,7 +2,7 @@ package example
 
 import org.web3j.protocol.Web3j
 import org.web3j.protocol.core.DefaultBlockParameter
-import org.web3j.protocol.core.methods.response.Web3ClientVersion
+import org.web3j.protocol.core.methods.response.{Transaction, Web3ClientVersion}
 import org.web3j.protocol.http.HttpService
 
 class EthereumClient(private val web3: Web3j) {
@@ -27,5 +27,25 @@ class EthereumClient(private val web3: Web3j) {
     println(s"📄 Tx Count: ${block.getTransactions.size()}")
     println(s"⛽ Gas Used: ${block.getGasUsed}")
     println(s"⛽ Gas Limit: ${block.getGasLimit}")
+  }
+
+  def printTransactionInfo(txHash: String): Unit = {
+    val response = web3.ethGetTransactionByHash(txHash).send()
+    val maybeTx = response.getTransaction
+
+    if (maybeTx.isPresent) {
+      val tx: Transaction = maybeTx.get()
+      println(s"🔗 Transaction Hash: ${tx.getHash}")
+      println(s"📤 From: ${tx.getFrom}")
+      println(s"📥 To: ${tx.getTo}")
+      println(s"💰 Value (wei): ${tx.getValue}")
+      println(s"⛽ Gas: ${tx.getGas}")
+      println(s"⛽ Gas Price: ${tx.getGasPrice}")
+      println(s"🔢 Nonce: ${tx.getNonce}")
+      println(s"📦 Block Number: ${tx.getBlockNumber}")
+      println(s"📛 Input Data: ${tx.getInput}")
+    } else {
+      println(s"⚠️ No transaction found for hash: $txHash")
+    }
   }
 }
