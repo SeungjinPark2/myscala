@@ -1,7 +1,6 @@
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
-import indexer.{BlockEvent, IndexerActor, Profile}
 import akka.http.scaladsl.model.*
 import akka.http.scaladsl.server.Directives.*
 
@@ -29,5 +28,4 @@ object HttpServerSample {
       .flatMap(_.unbind()) // trigger unbinding from the port
       .onComplete(_ => system.terminate()) // and shutdown when done
   }
-
 }
