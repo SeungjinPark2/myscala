@@ -14,9 +14,9 @@ import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 
 object QuickStartServer {
-  final case class ItemsResponse(result: List[Item])
+  private final case class ItemsResponse(result: List[Item])
 
-  trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
+  private trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
     implicit val itemFormat: RootJsonFormat[Item] = jsonFormat3(Item.apply)
     implicit val itemListFormat: RootJsonFormat[ItemsResponse] = jsonFormat1(ItemsResponse.apply)
   }
