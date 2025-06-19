@@ -1,0 +1,51 @@
+오늘의 수확
+
+6-10
+implicit 이 뭔지 조금 알게됨 (선언 해두면 다른 함수의 인자로 자동으로 껴들어감)
+인덱싱 구조 조금 고민해봄
+akka http 구성 (간단예제)
+akka 의존성은 별도의 resolver 를 추가해줘야
+
+6-11
+system.executionContext 는 Future (비동기 작업) 이 어디에서 실행될지 제어하는 컨트롤러, 컨텍스트.
+system.executionContext 는 actor system 에서 제공하는 컨텍스트.
+import scala.concurrent.ExecutionContext.Implicits.global => JVM 에서 제공하는 전역 스레드풀.
+한마디로 "비동기 작업이 수행될 장소"
+
+class vs object
+여러번 생성 vs 싱글
+
+6-12
+case class 는 자동으로 여러 함수를 만들어줌
+apply(...): 생성자처럼 호출할 수 있게 해줌, 임마가 그냥 생성자임.
+unapply(...): 패턴 매칭을 가능하게 함 (이건 아직 잘 모르겠다)
+toString, equals, hashCode: override됨
+copy(...): 객체 복제 기능
+
+6-13
+scala 의 implicit resolution 은 단순히 스코프내 implicit val 이 있으면 그것을 쓰는 것이 다가 아님.
+스코프 내 implicit def 가 있다면 자동으로 그것을 호출하기도 함.
+가독성이 엄청 떨어지는데 왜이렇게하는지 의문.
+예를 들어 akka 에서 post 요청의 entity(as[Item]) 은 request body json 을 Item 타입으로 unmarshal 해주는 코드임
+as[Item] 은 Item 타입의 FromRequestUnmarshaller 를 리턴하는데 이 implicit 은 sprayJsonUnmarshaller 를 호출해야함
+sprayJsonUnmarshaller 의 인자는 RootJsonReader 를 implicit 하고 이 변수는 우리 스코프 내의 RootJsonFormat 타입의 변수임
+implicit resolution rule 에 의해 sprayJsonUnmarshaller 는 자동으로 호출되어 as 함수의 인자로 끼워 맞춰짐.
+
+6-15
+오늘은 akka 의 공식문서를 정독.
+akka 의 철학은 다음 키워드를 포함한다 - elastic, agile, resilient
+agile - 민첩함, 기민함, 아카에서는 유연함에 가깝다. 예를 들어 런타임에서 각 모듈이 느슨하게 결합됨 -> 특정 로직을 액터를 교체해서 무중단으로 기능을 업데이트, 변경가능.
+클러스터 전체를 다시 시작할 필요 없이, 부품 단위로 교체하고 유지보수할 수 있는 "살아있는 생명체" 같은 시스템"
+
+sealed trait - sealed는 이 trait를 같은 파일 내에서만 상속 가능하게 제한
+ActorRef[T]는 Akka Typed에서 T 타입의 메시지를 받을 수 있는 액터의 참조(주소)
+Behavior 와 Actor 는 엄연히 다른것. Behavior 는 Actor 가 어떻게 동작할 지 정의한 청사진이고 Behavior 의 정의에 따라 런타임에서 수행되는 것이 Actor 이다.
+
+
+6-19
+Behaviors.setup: GuardianActorBehavior 를 받아 root actor 를 생성하여 초기화블록 - 최초 1회 실행시킴
+Behaviors.withTimers: 액터 내부에서 정해진 시간마다 메시지를 자동으로 스스로에게 보낼 수 있는 기능을 제공
+Behaviors.supervise: behavior 를 인자로 받아 wrap 함. 여러 strategy 를 적용시킬수 있음 (backoff, restart 등등), 이는 exception 이 발생할 때 동작을 정의하는것
+Behaviors.receive: 액터가 메세지로부터 어떻게 반응할 것인지 정의
+
+Behaviors.empty: 는 액터가 더이상 메시지를 처리하지 않게 만듬 (할일을 다했다) 
