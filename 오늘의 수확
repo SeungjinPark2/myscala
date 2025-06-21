@@ -48,4 +48,12 @@ Behaviors.withTimers: 액터 내부에서 정해진 시간마다 메시지를 �
 Behaviors.supervise: behavior 를 인자로 받아 wrap 함. 여러 strategy 를 적용시킬수 있음 (backoff, restart 등등), 이는 exception 이 발생할 때 동작을 정의하는것
 Behaviors.receive: 액터가 메세지로부터 어떻게 반응할 것인지 정의
 
-Behaviors.empty: 는 액터가 더이상 메시지를 처리하지 않게 만듬 (할일을 다했다) 
+Behaviors.empty: 는 액터가 더이상 메시지를 처리하지 않게 만듬 (할일을 다했다)
+
+6-21
+actor model 탄생 배경 - 
+현대 컴퓨터 아키텍쳐에서 "공유메모리"는 거의 사라진지 오래 - 좀 더 찾아볼것
+cpu cache 는 core 당 3layer 씩 존재 (모든 cpu 가 공유 x)
+지역변수를 예로 들면, 먼저 cpu cache 에 있는지 확인, miss 시 cache line 을 통해 memory 에서 load
+자바의 volatile 은 모든 thread 가 특정 변수 값 변화를 인지하게 만듬 - cpu cache 끼리 동기화 시켜야 하는데 이 작업이 값비싼 작업임
+
